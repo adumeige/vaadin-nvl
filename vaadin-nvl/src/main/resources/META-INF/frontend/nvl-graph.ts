@@ -27,6 +27,12 @@ export class NvlGraph extends LitElement {
   private dragNodeInteraction: DragNodeInteraction | null = null;
   private clickInteraction: ClickInteraction | null = null;
 
+  // Popup state
+  private popupOverlay: HTMLDivElement | null = null;
+  private popupTargetId: string | null = null;
+  private popupTargetIsRelationship = false;
+  private popupTrackingRaf: number | null = null;
+
   @property({ type: Array })
   nodes: Node[] = [];
 
@@ -51,11 +57,18 @@ export class NvlGraph extends LitElement {
           display: block;
           width: 100%;
           height: 100%;
+          position: relative;
         }
         .nvl-container {
           width: 100%;
           height: 100%;
           min-height: 400px;
+        }
+        .nvl-popup-overlay {
+          position: absolute;
+          z-index: 100;
+          pointer-events: auto;
+          display: none;
         }
       </style>
       <div class="nvl-container"></div>
@@ -64,6 +77,11 @@ export class NvlGraph extends LitElement {
 
   firstUpdated() {
     this.container = this.querySelector(".nvl-container") as HTMLDivElement;
+    // Create popup overlay imperatively (outside Lit's template) so Lit
+    // re-renders never wipe its children.
+    this.popupOverlay = document.createElement("div");
+    this.popupOverlay.classList.add("nvl-popup-overlay");
+    this.appendChild(this.popupOverlay);
     this.initNvl();
   }
 
@@ -384,9 +402,159 @@ export class NvlGraph extends LitElement {
     return this.nvlInstance?.getImageDataUrl(options) ?? "";
   }
 
+  // ===== Popup methods =====
+
+  showPopup(elementId: string, isRelationship: boolean) {
+    this.popupTargetId = elementId;
+    this.popupTargetIsRelationship = isRelationship;
+    if (this.popupOverlay) {
+      // Move all server-appended popup content (direct children that aren't
+      // the container, overlay, or style elements) into the overlay div.
+      const contentChildren = Array.from(this.children).filter(
+        (child) =>
+          child !== this.popupOverlay &&
+          child !== this.container &&
+          child.tagName !== "STYLE"
+      );
+      for (const child of contentChildren) {
+        this.popupOverlay.appendChild(child);
+      }
+      this.popupOverlay.style.display = "block";
+    }
+    this.updatePopupPosition();
+    this.startPopupTracking();
+  }
+
+  hidePopup() {
+    this.stopPopupTracking();
+    this.popupTargetId = null;
+    if (this.popupOverlay) {
+      this.popupOverlay.style.display = "none";
+      // Move children back out of the overlay so Vaadin can remove them
+      while (this.popupOverlay.firstChild) {
+        this.appendChild(this.popupOverlay.firstChild);
+      }
+    }
+  }
+
+  private getWorldPosition(
+    elementId: string,
+    isRelationship: boolean
+  ): { x: number; y: number } | null {
+    if (!this.nvlInstance) return null;
+
+    if (isRelationship) {
+      const rels = this.nvlInstance.getRelationships();
+      const rel = rels.find((r) => r.id === elementId);
+      if (!rel) return null;
+      const fromPos = this.nvlInstance.getPositionById(rel.from);
+      const toPos = this.nvlInstance.getPositionById(rel.to);
+      if (!fromPos || !toPos) return null;
+      return {
+        x: ((fromPos.x ?? 0) + (toPos.x ?? 0)) / 2,
+        y: ((fromPos.y ?? 0) + (toPos.y ?? 0)) / 2,
+      };
+    } else {
+      const pos = this.nvlInstance.getPositionById(elementId);
+      if (!pos) return null;
+      return { x: pos.x ?? 0, y: pos.y ?? 0 };
+    }
+  }
+
+  /**
+   * Converts an element's world position to CSS-pixel coordinates relative to
+   * the `<nvl-graph>` host element.
+   *
+   * NVL's `getPan()` returns the camera/viewport offset in world space, so it
+   * must be subtracted: screenPos = center + (worldPos - pan) * scale
+   */
+  private getElementScreenPosition(
+    elementId: string,
+    isRelationship: boolean
+  ): { x: number; y: number } | null {
+    if (!this.nvlInstance || !this.container) return null;
+
+    const world = this.getWorldPosition(elementId, isRelationship);
+    if (!world) return null;
+
+    const scale = this.nvlInstance.getScale();
+    const pan = this.nvlInstance.getPan();
+    const thisRect = this.getBoundingClientRect();
+
+    // Canvas renderer
+    const canvas = this.container.querySelector("canvas");
+    if (canvas) {
+      const canvasRect = canvas.getBoundingClientRect();
+      return {
+        x:
+          canvasRect.left -
+          thisRect.left +
+          canvasRect.width / 2 +
+          (world.x - pan.x) * scale,
+        y:
+          canvasRect.top -
+          thisRect.top +
+          canvasRect.height / 2 +
+          (world.y - pan.y) * scale,
+      };
+    }
+
+    // SVG renderer
+    const svg = this.container.querySelector("svg");
+    if (svg) {
+      const svgRect = svg.getBoundingClientRect();
+      return {
+        x:
+          svgRect.left -
+          thisRect.left +
+          svgRect.width / 2 +
+          (world.x - pan.x) * scale,
+        y:
+          svgRect.top -
+          thisRect.top +
+          svgRect.height / 2 +
+          (world.y - pan.y) * scale,
+      };
+    }
+
+    return null;
+  }
+
+  private updatePopupPosition() {
+    if (!this.popupOverlay || !this.popupTargetId) return;
+
+    const pos = this.getElementScreenPosition(
+      this.popupTargetId,
+      this.popupTargetIsRelationship
+    );
+    if (!pos) return;
+
+    // Position the popup so it's centered horizontally above the element
+    this.popupOverlay.style.left = `${pos.x}px`;
+    this.popupOverlay.style.top = `${pos.y}px`;
+    this.popupOverlay.style.transform = "translate(-50%, -100%)";
+  }
+
+  private startPopupTracking() {
+    this.stopPopupTracking();
+    const track = () => {
+      this.updatePopupPosition();
+      this.popupTrackingRaf = requestAnimationFrame(track);
+    };
+    this.popupTrackingRaf = requestAnimationFrame(track);
+  }
+
+  private stopPopupTracking() {
+    if (this.popupTrackingRaf !== null) {
+      cancelAnimationFrame(this.popupTrackingRaf);
+      this.popupTrackingRaf = null;
+    }
+  }
+
   // ===== Lifecycle =====
 
   private destroyNvl() {
+    this.stopPopupTracking();
     this.clickInteraction?.destroy();
     this.clickInteraction = null;
     this.dragNodeInteraction?.destroy();

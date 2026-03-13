@@ -36,6 +36,7 @@ class MainLayout : AppLayout() {
             addItem(SideNavItem("Export", ExportView::class.java))
             addItem(SideNavItem("Interaction", InteractionView::class.java))
             addItem(SideNavItem("Events", EventsView::class.java))
+            addItem(SideNavItem("Popup", PopupView::class.java))
         }
         addToDrawer(nav)
     }

@@ -305,6 +305,69 @@ class NvlGraph(options: NvlOptions? = null) : Component(), HasSize {
         element.callJsFunction("getImageDataUrl", opts).then(String::class.java) { callback.accept(it) }
     }
 
+    // ===== Popup =====
+
+    private var popupContent: Component? = null
+
+    /**
+     * Shows a Vaadin component as a popup overlay positioned on top of the given node.
+     *
+     * The popup tracks the node's position as the user pans and zooms.
+     * Only one popup can be displayed at a time; calling this while a popup is already
+     * visible will replace it.
+     *
+     * @param nodeId The ID of the node to anchor the popup to.
+     * @param content The Vaadin component to display in the popup.
+     */
+    fun showPopupOnNode(nodeId: String, content: Component) {
+        showPopup(nodeId, isRelationship = false, content = content)
+    }
+
+    /**
+     * Shows a Vaadin component as a popup overlay positioned at the midpoint of the
+     * given relationship.
+     *
+     * The popup tracks the relationship's position as the user pans and zooms.
+     * Only one popup can be displayed at a time; calling this while a popup is already
+     * visible will replace it.
+     *
+     * @param relationshipId The ID of the relationship to anchor the popup to.
+     * @param content The Vaadin component to display in the popup.
+     */
+    fun showPopupOnRelationship(relationshipId: String, content: Component) {
+        showPopup(relationshipId, isRelationship = true, content = content)
+    }
+
+    /**
+     * Hides the currently displayed popup, if any.
+     *
+     * The popup content component is removed from the DOM.
+     */
+    fun hidePopup() {
+        val content = popupContent ?: return
+        popupContent = null
+        // Tell the client to hide the overlay and remove the content element.
+        // We pass the element reference so the client can find and remove it
+        // regardless of whether it's a direct child or inside the overlay.
+        element.executeJs(
+            "this.hidePopup(); if ($0.parentNode) $0.parentNode.removeChild($0);",
+            content.element,
+        )
+    }
+
+    /** Returns `true` if a popup is currently displayed. */
+    val isPopupVisible: Boolean
+        get() = popupContent != null
+
+    private fun showPopup(elementId: String, isRelationship: Boolean, content: Component) {
+        hidePopup()
+        popupContent = content
+        // Append as a real Vaadin child so Flow manages its lifecycle and rendering.
+        // The client-side showPopup() will move it into the positioned overlay div.
+        element.appendChild(content.element)
+        element.callJsFunction("showPopup", elementId, isRelationship)
+    }
+
     // ===== Events =====
 
     /** Registers a listener for single-click events on nodes, relationships, or the canvas. */

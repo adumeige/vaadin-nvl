@@ -1,6 +1,7 @@
 # Vaadin NVL
 
-A Vaadin Flow component (Kotlin) wrapping [Neo4j NVL](https://neo4j.com/docs/nvl/current/) (`@neo4j-nvl/base` 1.1.0) for interactive graph visualization.
+A Vaadin Flow component (Kotlin) wrapping [Neo4j NVL](https://neo4j.com/docs/nvl/current/) (`@neo4j-nvl/base` 1.1.0) for
+interactive graph visualization.
 
 ## Modules
 
@@ -39,13 +40,17 @@ graph.setGraph(
 
 ## Screenshots
 
-| Basic Graph | Layout Algorithms |
-|:-----------:|:-----------------:|
+|                      Basic Graph                      |                    Layout Algorithms                    |
+|:-----------------------------------------------------:|:-------------------------------------------------------:|
 | ![Basic Graph](docs/screenshots/screenshot_basic.png) | ![Layout Algorithms](docs/screenshots/graph_layout.png) |
 
-| Events | SVG Export |
-|:------:|:----------:|
+|                    Events                    |                    SVG Export                    |
+|:--------------------------------------------:|:------------------------------------------------:|
 | ![Events](docs/screenshots/graph_events.png) | ![SVG Export](docs/screenshots/graph_export.svg) |
+
+|            Contextual component             |
+|:-------------------------------------------:|
+| ![Events](docs/screenshots/graph_popup.png) |
 
 ## Build & run
 
