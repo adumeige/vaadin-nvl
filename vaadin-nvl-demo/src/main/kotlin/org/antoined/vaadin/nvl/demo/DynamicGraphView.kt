@@ -12,6 +12,12 @@ import org.antoined.vaadin.nvl.NvlGraph
 import org.antoined.vaadin.nvl.NvlNode
 import org.antoined.vaadin.nvl.NvlRelationship
 
+/**
+ * Demo view for dynamically adding, removing, updating, and replacing graph elements at runtime.
+ *
+ * Showcases [NvlGraph.addAndUpdateElements], [NvlGraph.removeNodes], [NvlGraph.updateElements],
+ * [NvlGraph.setGraph], and the async [NvlGraph.getNodes] round-trip.
+ */
 @Route("dynamic", layout = MainLayout::class)
 class DynamicGraphView : VerticalLayout() {
     private var nodeCounter = 0

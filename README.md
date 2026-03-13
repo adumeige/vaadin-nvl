@@ -37,6 +37,16 @@ graph.setGraph(
 - **Events** — Click, double-click, context menu, layout done, zoom transition, node drag end
 - **Async getters** — `getNodes`, `getRelationships`, `getScale`, `getPan`, `getNodePositions`, etc.
 
+## Screenshots
+
+| Basic Graph | Layout Algorithms |
+|:-----------:|:-----------------:|
+| ![Basic Graph](docs/screenshots/screenshot_basic.png) | ![Layout Algorithms](docs/screenshots/graph_layout.png) |
+
+| Events | SVG Export |
+|:------:|:----------:|
+| ![Events](docs/screenshots/graph_events.png) | ![SVG Export](docs/screenshots/graph_export.svg) |
+
 ## Build & run
 
 ```bash

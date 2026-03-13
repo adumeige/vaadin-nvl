@@ -12,6 +12,12 @@ import org.antoined.vaadin.nvl.NvlLayout
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
+/**
+ * Demo view that logs all NVL callback events in real-time.
+ *
+ * Demonstrates initialization, layout, zoom, click, double-click, and context menu events
+ * with a scrollable log panel and trigger buttons.
+ */
 @Route("events", layout = MainLayout::class)
 class EventsView : VerticalLayout() {
     private val logArea = VerticalLayout().apply {

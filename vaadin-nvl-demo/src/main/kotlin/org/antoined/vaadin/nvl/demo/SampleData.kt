@@ -3,7 +3,11 @@ package org.antoined.vaadin.nvl.demo
 import org.antoined.vaadin.nvl.NvlNode
 import org.antoined.vaadin.nvl.NvlRelationship
 
+/**
+ * Provides reusable sample graph data (The Matrix movie cast) used across demo views.
+ */
 object SampleData {
+    /** Returns a list of nodes representing actors, directors, producers, and movies. */
     fun movieNodes() = listOf(
         NvlNode(id = "keanu", caption = "Keanu Reeves", color = "#4C8BF5", size = 30),
         NvlNode(id = "carrie", caption = "Carrie-Anne Moss", color = "#4C8BF5", size = 25),
@@ -17,6 +21,7 @@ object SampleData {
         NvlNode(id = "matrix3", caption = "The Matrix Revolutions", color = "#EA4335", size = 35),
     )
 
+    /** Returns a list of relationships (ACTED_IN, DIRECTED, PRODUCED) between the movie nodes. */
     fun movieRelationships() = listOf(
         NvlRelationship(id = "r1", from = "keanu", to = "matrix", caption = "ACTED_IN"),
         NvlRelationship(id = "r2", from = "carrie", to = "matrix", caption = "ACTED_IN"),

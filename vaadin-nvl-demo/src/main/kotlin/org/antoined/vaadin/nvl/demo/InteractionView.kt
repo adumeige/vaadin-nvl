@@ -13,6 +13,10 @@ import com.vaadin.flow.router.Route
 import org.antoined.vaadin.nvl.NvlGraph
 import org.antoined.vaadin.nvl.NvlNode
 
+/**
+ * Demo view for interactive graph manipulation: node dragging, pinning/unpinning,
+ * programmatic node positioning (circle arrangement), and fit-all.
+ */
 @Route("interaction", layout = MainLayout::class)
 class InteractionView : VerticalLayout() {
     init {

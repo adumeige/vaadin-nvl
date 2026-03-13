@@ -11,6 +11,12 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.router.Route
 import org.antoined.vaadin.nvl.NvlGraph
 
+/**
+ * Demo view for exporting the graph as PNG, SVG, or a Base64 data URL.
+ *
+ * Showcases [NvlGraph.saveToFile], [NvlGraph.saveToSvg], [NvlGraph.saveFullGraphToLargeFile],
+ * and [NvlGraph.getImageDataUrl].
+ */
 @Route("export", layout = MainLayout::class)
 class ExportView : VerticalLayout() {
     init {

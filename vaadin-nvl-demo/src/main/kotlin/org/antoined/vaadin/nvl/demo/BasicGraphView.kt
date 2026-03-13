@@ -9,6 +9,11 @@ import org.antoined.vaadin.nvl.NvlGraph
 import org.antoined.vaadin.nvl.NvlOptions
 import org.antoined.vaadin.nvl.NvlRenderer
 
+/**
+ * Demo view showing a basic movie graph with click, double-click, and context menu event handling.
+ *
+ * This is the default landing page of the demo application.
+ */
 @Route("", layout = MainLayout::class)
 class BasicGraphView : VerticalLayout() {
     init {

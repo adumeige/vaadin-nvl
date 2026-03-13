@@ -15,6 +15,12 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.router.Route
 import org.antoined.vaadin.nvl.*
 
+/**
+ * Demo view for per-element and global styling.
+ *
+ * Allows editing individual node/relationship properties (color, size, caption, disabled state, etc.),
+ * switching renderers, applying color themes, and changing global styling via [NvlGraph.restart].
+ */
 @Route("styling", layout = MainLayout::class)
 class StylingView : VerticalLayout() {
 

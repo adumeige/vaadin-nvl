@@ -10,6 +10,7 @@ import com.vaadin.flow.component.sidenav.SideNav
 import com.vaadin.flow.component.sidenav.SideNavItem
 import com.vaadin.flow.router.Layout
 
+/** Application shell layout with a side navigation drawer listing all demo views. */
 @Layout
 class MainLayout : AppLayout() {
     init {

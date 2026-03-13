@@ -12,6 +12,13 @@ import com.vaadin.flow.router.Route
 import org.antoined.vaadin.nvl.NvlGraph
 import org.antoined.vaadin.nvl.NvlZoomOptions
 
+/**
+ * Demo view for programmatic zoom and pan control.
+ *
+ * Showcases [NvlGraph.setZoom], [NvlGraph.setPan], [NvlGraph.setZoomAndPan], [NvlGraph.resetZoom],
+ * [NvlGraph.fit], [NvlGraph.fitAll], and the async getters [NvlGraph.getScale], [NvlGraph.getPan],
+ * and [NvlGraph.getZoomLimits].
+ */
 @Route("zoom-pan", layout = MainLayout::class)
 class ZoomPanView : VerticalLayout() {
     init {

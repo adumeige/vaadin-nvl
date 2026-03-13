@@ -12,6 +12,10 @@ import org.antoined.vaadin.nvl.NvlGraph
 import org.antoined.vaadin.nvl.NvlHierarchicalOptions
 import org.antoined.vaadin.nvl.NvlLayout
 
+/**
+ * Demo view for switching between all available layout algorithms and configuring
+ * hierarchical layout direction.
+ */
 @Route("layouts", layout = MainLayout::class)
 class LayoutsView : VerticalLayout() {
     init {

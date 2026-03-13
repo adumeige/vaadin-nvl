@@ -12,6 +12,12 @@ import com.vaadin.flow.router.Route
 import org.antoined.vaadin.nvl.NvlGraph
 import org.antoined.vaadin.nvl.NvlNode
 
+/**
+ * Demo view for node/relationship selection and pinning.
+ *
+ * Showcases selecting/deselecting nodes, pinning/unpinning, querying selected elements,
+ * reading node positions, and moving nodes programmatically.
+ */
 @Route("selection-pinning", layout = MainLayout::class)
 class SelectionPinningView : VerticalLayout() {
     init {

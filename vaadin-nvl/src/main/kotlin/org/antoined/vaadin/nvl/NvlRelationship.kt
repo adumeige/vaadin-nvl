@@ -3,6 +3,26 @@ package org.antoined.vaadin.nvl
 import elemental.json.Json
 import elemental.json.JsonObject
 
+/**
+ * Represents a directed relationship (edge) between two nodes.
+ *
+ * [id], [from], and [to] are required. All other properties are optional.
+ *
+ * @property id Unique identifier for this relationship.
+ * @property from ID of the source node.
+ * @property to ID of the target node.
+ * @property caption Simple text label displayed on the relationship line.
+ * @property color CSS color string for the relationship stroke.
+ * @property selected Whether this relationship is visually selected.
+ * @property disabled Whether this relationship is rendered in a disabled/dimmed style.
+ * @property hovered Whether this relationship is rendered in its hover state.
+ * @property captionSize Caption font size level (1 = small, 2 = medium, 3 = large).
+ * @property captionAlign Vertical alignment of the caption relative to the relationship line.
+ * @property captions Styled caption segments for multi-style labels.
+ * @property overlayIcon An icon overlay displayed on the relationship.
+ * @property type A semantic type label (e.g. `"KNOWS"`, `"ACTED_IN"`).
+ * @property width Stroke width of the relationship line in pixels.
+ */
 data class NvlRelationship(
     val id: String,
     val from: String,
