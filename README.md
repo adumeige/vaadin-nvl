@@ -54,6 +54,19 @@ graph.setGraph(
 
 ## Build & run
 
+Import maven artifact:
+
+```xml
+
+<dependency>
+    <groupId>org.antoined</groupId>
+    <artifactId>vaadin-nvl</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+Or build :
+
 ```bash
 # Build everything
 mvn compile
@@ -63,8 +76,3 @@ mvn -pl vaadin-nvl-demo spring-boot:run
 ```
 
 Then open http://localhost:8080.
-
-## Requirements
-
-- Java 17+
-- Maven 3.8+
